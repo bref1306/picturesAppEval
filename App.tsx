@@ -1,14 +1,13 @@
 import Camera, { CameraCapturedPicture } from 'expo-camera/build/Camera';
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Button, Modal, Image, FlatList, TouchableOpacity, SafeAreaView} from 'react-native';
+import { StyleSheet, Text, View, Button, Modal, SafeAreaView, StatusBar, Linking} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent from './components/cameraComponent';
-import FontAwesome from '@expo/vector-icons/build/FontAwesome';
 import Gallery from './components/gallery';
+import * as MediaLibrary from 'expo-media-library';
 
 export default function App() {
-  const [hasPermission, setHasPermission] = useState(Boolean||null);;
+  const [hasPermission, setHasPermission] = useState(Boolean||null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [modalVisible, setModalVisible] = useState(false);
   const cameraRef = useRef<Camera|null>();
@@ -21,38 +20,44 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
   //       MediaLibrary.saveToLibraryAsync(uri);
   //     }
   //   }
-    const takePicture = () => {
-     cameraRef.current && cameraRef.current.takePictureAsync({base64: true}).then((picture) => {
-      const CapturedPicture : CameraCapturedPicture = ({
-        ...picture,
-     }); 
-       setTable([
-         ...pictureArray,
-         CapturedPicture
-      ])
-     })
-    }
+   
   async function save(key : string, value : string) {
     await AsyncStorage.setItem(key, value);
   }
 
-  useEffect(() => {
-    if (pictureArray.length == 0) {
-      AsyncStorage.getItem('savedPicture').then((data) => {
-        data && save('savedPicture', JSON.stringify(data));
-      })
-    }
-    if (pictureArray.length > 0) {
-      save('savedPicture', JSON.stringify(pictureArray));
-    }
-  }, [pictureArray]);
+  // useEffect(() => {
+  //   if (pictureArray.length == 0) {
+  //     AsyncStorage.getItem('savedPicture').then((data) => {
+  //       data && save('savedPicture', JSON.stringify(data));
+  //     })
+  //   }
+  //   if (pictureArray.length > 0) {
+  //     save('savedPicture', JSON.stringify(pictureArray));
+  //   }
+  // }, [pictureArray]);
   
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
+      try {
+        const res = await MediaLibrary.requestPermissionsAsync();
+        
+      } catch (error) {
+        console.log(error);
+      }
+      // if (res.granted) {
+      //   console.log('accepté')
+      // }else {
+      //   console.log('merde')
+      // }
+      // const granted = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+     
     })();
   }, []);
+
+
+
   if (hasPermission === null) {
     return <View />;
   }
@@ -60,7 +65,8 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
     return <Text>No access to camera</Text>;
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.parentContainer}>
+    <StatusBar hidden={false}></StatusBar>
     <View style={styles.container}>
       
       <Button
@@ -70,16 +76,15 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
         title="Prendre une photo"
         color="#841584"
       />
-      <Gallery pictureArray={pictureArray}></Gallery>
+      <Gallery setTable={setTable} pictureArray={pictureArray}></Gallery>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          console.log('Modal has been closed.');
           setModalVisible(!modalVisible);
         } } >
-          
+
         <CameraComponent pictureArray={pictureArray} setTable={setTable}></CameraComponent>
       </Modal>
     </View>
@@ -88,8 +93,13 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
 }
 
 const styles = StyleSheet.create({
+  parentContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent:'space-between'
   },
   camera: {
     flex: 1,

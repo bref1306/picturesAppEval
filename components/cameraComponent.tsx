@@ -8,15 +8,7 @@ import FontAwesome from '@expo/vector-icons/build/FontAwesome';
 const CameraComponent:React.FunctionComponent<{pictureArray: CameraCapturedPicture[], setTable: React.Dispatch<React.SetStateAction<CameraCapturedPicture[]>>}> = ({setTable, pictureArray, ...props}) => {
     const cameraRef = useRef<Camera|null>();
     const [type, setType] = useState(Camera.Constants.Type.back);
-    // const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
-   
-    // const saveGallery = async (uri : string) => {
-    //     const res = await MediaLibrary.requestPermissionsAsync()
-    //     if (res.granted) {
-    //       MediaLibrary.saveToLibraryAsync(uri);
-    //     }
-    //   }
-      const takePicture = () => {
+    const takePicture = () => {
        
        cameraRef.current && cameraRef.current.takePictureAsync({base64: true}).then((picture) => {
         const CapturedPicture : CameraCapturedPicture = ({
