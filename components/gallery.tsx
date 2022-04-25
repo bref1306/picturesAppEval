@@ -1,10 +1,11 @@
 import { CameraCapturedPicture } from "expo-camera";
 import React, { useEffect, useState } from "react";
-import { View, FlatList, Image, TouchableOpacity, Modal, Text, Button } from "react-native";
+import { View, FlatList, Image, TouchableOpacity, Modal, Text, Button, Platform } from "react-native";
 import FontAwesome from '@expo/vector-icons/build/FontAwesome';
 import * as MediaLibrary from 'expo-media-library';
 import { BottomSheet } from "react-native-elements";
-
+import * as Sharing from 'expo-sharing';
+import ModalImage from "./modalImage";
 const Gallery:React.FunctionComponent<{pictureArray: CameraCapturedPicture[], setTable: React.Dispatch<React.SetStateAction<CameraCapturedPicture[]>>}> = ({pictureArray, setTable, ...props}) => {
     
     const [modalPictureVisible, setModalPictureVisible] = useState(false);
@@ -31,6 +32,14 @@ const Gallery:React.FunctionComponent<{pictureArray: CameraCapturedPicture[], se
         })();
       }, []);
       
+      let openShareDialogAsync = async (item : Object)  => {
+        if (Platform.OS === 'web') {
+         console.log('pas valable')
+          return;
+        }
+    
+        await Sharing.shareAsync(item.toString());
+      }; 
     return <FlatList
         horizontal={true}
         data={pictureArray}
@@ -53,9 +62,11 @@ const Gallery:React.FunctionComponent<{pictureArray: CameraCapturedPicture[], se
                         >
                             <View>
                                 <Image source={{ uri: 'data:image/jpg;base64,' + picturebase64 }} style={{ width: '100%', height: '100%', borderColor: 'red' }}></Image>
+                                <FontAwesome name="share" size={40} style={{color: '#fff', position: 'absolute', padding:20}}  onPress={() => openShareDialogAsync(item.uri)}></FontAwesome>
                             </View>
 
                         </Modal>
+                        {/* <ModalImage picturebase64={picturebase64} setModalPictureVisible={setModalPictureVisible} modalPictureVisible={modalPictureVisible}></ModalImage> */}
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent:'space-between'}}>
                         <FontAwesome name="save" size={40} style={{color: '#000'}} onPress={ 
