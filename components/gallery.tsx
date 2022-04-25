@@ -6,13 +6,18 @@ import * as MediaLibrary from 'expo-media-library';
 import { BottomSheet } from "react-native-elements";
 import * as Sharing from 'expo-sharing';
 import ModalImage from "./modalImage";
-const Gallery:React.FunctionComponent<{pictureArray: CameraCapturedPicture[], setTable: React.Dispatch<React.SetStateAction<CameraCapturedPicture[]>>}> = ({pictureArray, setTable, ...props}) => {
+import { pictureNewType } from "../type/pictureNewType";
+const Gallery:React.FunctionComponent<{pictureArray: pictureNewType[], setTable: React.Dispatch<React.SetStateAction<pictureNewType[]>>}> = ({pictureArray, setTable, ...props}) => {
     
     const [modalPictureVisible, setModalPictureVisible] = useState(false);
     const [picturebase64, setPictureBase64] = useState(Object || undefined);
     const [hasPermission, setHasPermission] = useState(Boolean||null);
     const [visibleIcon, setVisibleIcon] = useState(false);
     const [BottomSheetVisible, setVisibleBottomSheet] = useState(false);
+    // const saved : pictureNewType = ([
+    //     ...pictureArray,
+    //     true
+    // ]); 
     const saveGallery = async (uri : string) => {
       const res = await MediaLibrary.requestPermissionsAsync()
       if (res.granted) {
@@ -69,14 +74,25 @@ const Gallery:React.FunctionComponent<{pictureArray: CameraCapturedPicture[], se
                         {/* <ModalImage picturebase64={picturebase64} setModalPictureVisible={setModalPictureVisible} modalPictureVisible={modalPictureVisible}></ModalImage> */}
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent:'space-between'}}>
-                        <FontAwesome name="save" size={40} style={{color: '#000'}} onPress={ 
+                        <FontAwesome name={item.saved ? "save" : "cloud" } size={40} style={{color: '#000'}} onPress={ 
                             () => {
                                 saveGallery(item.uri)
+                                pictureArray.forEach((picture) => {
+                                    if (picture.uri == item.uri) {
+                                        item.saved = true
+                                    }
+                                },
+                                setTable([
+                                    ...pictureArray
+                                ])
+                                    
+                                )
                             }} />
+                            
                         <FontAwesome name="close" size={40} style={{color: '#000'}} onPress={ 
                             () => {
                             setVisibleBottomSheet(true)
-                            }} />
+                        }} />
                     </View>
                     <BottomSheet
                     isVisible={BottomSheetVisible}

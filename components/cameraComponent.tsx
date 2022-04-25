@@ -4,21 +4,25 @@ import React, { SetStateAction, useRef, useState } from 'react';
 import { FlatList, Platform, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import FontAwesome from '@expo/vector-icons/build/FontAwesome';
+import { pictureNewType } from '../type/pictureNewType';
 
-const CameraComponent:React.FunctionComponent<{pictureArray: CameraCapturedPicture[], setTable: React.Dispatch<React.SetStateAction<CameraCapturedPicture[]>>}> = ({setTable, pictureArray, ...props}) => {
+const CameraComponent:React.FunctionComponent<{pictureArray: pictureNewType[], setTable: React.Dispatch<React.SetStateAction<pictureNewType[]>>}> = ({setTable, pictureArray, ...props}) => {
     const cameraRef = useRef<Camera|null>();
     const [type, setType] = useState(Camera.Constants.Type.back);
     const takePicture = () => {
        
-       cameraRef.current && cameraRef.current.takePictureAsync({base64: true}).then((picture) => {
-        const CapturedPicture : CameraCapturedPicture = ({
-          ...picture,
-       }); 
-         setTable([
-          CapturedPicture,
-           ...pictureArray
-        ])
-       })
+       cameraRef.current && cameraRef.current.takePictureAsync({base64: true}).then(
+        (picture) => {
+          let saved = false;
+            const pictureNewType : pictureNewType = ({
+              ...picture,
+              saved
+          }); 
+          setTable([
+            pictureNewType,
+            ...pictureArray
+          ])
+        })
       }
   return (
     <View style={styles.container}>

@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent from './components/cameraComponent';
 import Gallery from './components/gallery';
 import * as MediaLibrary from 'expo-media-library';
+import { pictureNewType } from './type/pictureNewType';
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(Boolean||null);
@@ -12,7 +13,7 @@ export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const cameraRef = useRef<Camera|null>();
   
-const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
+const [pictureArray, setTable] = useState<Array<pictureNewType>>([]);
  
   // const saveGallery = async (uri : string) => {
   //     const res = await MediaLibrary.requestPermissionsAsync()
@@ -25,16 +26,16 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
     await AsyncStorage.setItem(key, value);
   }
 
-  // useEffect(() => {
-  //   if (pictureArray.length == 0) {
-  //     AsyncStorage.getItem('savedPicture').then((data) => {
-  //       data && save('savedPicture', JSON.stringify(data));
-  //     })
-  //   }
-  //   if (pictureArray.length > 0) {
-  //     save('savedPicture', JSON.stringify(pictureArray));
-  //   }
-  // }, [pictureArray]);
+  useEffect(() => {
+    if (pictureArray.length == 0) {
+      AsyncStorage.getItem('savedPicture').then((data) => {
+        data && save('savedPicture', JSON.stringify(data));
+      })
+    }
+    if (pictureArray.length > 0) {
+      save('savedPicture', JSON.stringify(pictureArray));
+    }
+  }, [pictureArray]);
   
   useEffect(() => {
     (async () => {
