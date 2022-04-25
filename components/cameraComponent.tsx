@@ -23,8 +23,8 @@ const CameraComponent:React.FunctionComponent<{pictureArray: CameraCapturedPictu
           ...picture,
        }); 
          setTable([
-           ...pictureArray,
-           CapturedPicture
+          CapturedPicture,
+           ...pictureArray
         ])
        })
       }

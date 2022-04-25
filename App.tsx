@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, Button, Modal, Image, FlatList, TouchableOpacit
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent from './components/cameraComponent';
 import FontAwesome from '@expo/vector-icons/build/FontAwesome';
+import Gallery from './components/gallery';
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(Boolean||null);;
@@ -34,7 +35,7 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
   async function save(key : string, value : string) {
     await AsyncStorage.setItem(key, value);
   }
-  
+
   useEffect(() => {
     if (pictureArray.length == 0) {
       AsyncStorage.getItem('savedPicture').then((data) => {
@@ -63,23 +64,13 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
     <View style={styles.container}>
       
       <Button
-        onPress={() => {setModalVisible(!modalVisible)}}
+        onPress={() => {
+          setModalVisible(!modalVisible)
+        }}
         title="Prendre une photo"
         color="#841584"
       />
-      <FlatList
-        horizontal={true}
-        data={pictureArray}
-        inverted={true}
-        renderItem={({ item }) => {
-          return (
-            <View style={{ borderColor: '#fff', borderWidth: 2, flex: 1/3 }}>
-              <Image source={{ uri: 'data:image/jpg;base64,' + item.base64 }} style={{ width: 120, height: 120, borderColor: 'red' }}></Image>
-            </View>
-          );
-        } }
-        keyExtractor={(item) => item.uri} 
-    />
+      <Gallery pictureArray={pictureArray}></Gallery>
       <Modal
         animationType="slide"
         transparent={true}
@@ -88,10 +79,8 @@ const [pictureArray, setTable] = useState<Array<CameraCapturedPicture>>([]);
           console.log('Modal has been closed.');
           setModalVisible(!modalVisible);
         } } >
-           <View style={styles.container}>
-     
+          
         <CameraComponent pictureArray={pictureArray} setTable={setTable}></CameraComponent>
-    </View>
       </Modal>
     </View>
     </SafeAreaView>
