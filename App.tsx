@@ -47,12 +47,6 @@ const [pictureArray, setTable] = useState<Array<pictureNewType>>([]);
       } catch (error) {
         console.log(error);
       }
-      // if (res.granted) {
-      //   console.log('accepté')
-      // }else {
-      //   console.log('merde')
-      // }
-      // const granted = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
      
     })();
   }, []);
