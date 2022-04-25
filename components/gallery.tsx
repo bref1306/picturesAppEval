@@ -97,11 +97,11 @@ const Gallery:React.FunctionComponent<{pictureArray: pictureNewType[], setTable:
                     <BottomSheet
                     isVisible={BottomSheetVisible}
                     >
-                        <View style={{ backgroundColor: '#fff' }}>
+                        <View style={{ backgroundColor: 'red' }}>
                         <TouchableOpacity onPress={() => deletePicture(item.uri)}>
-                            <Text style={{ padding: 10, textAlign: "center" }}>Supprimer</Text>
+                            <Text style={{ padding: 10, textAlign: "center", color:"#fff" }}>Supprimer</Text>
                         </TouchableOpacity>
-                        <Button  title="Annuler" color="red" onPress={() => { setVisibleBottomSheet(false)}}></Button>
+                        <Button  title="Annuler" color="black" onPress={() => {setVisibleBottomSheet(false)}}></Button>
                             
                         </View>
                     </BottomSheet>
