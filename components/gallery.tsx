@@ -4,15 +4,14 @@ import { View, FlatList, Image, TouchableOpacity, Modal, Text, Button, Platform 
 import FontAwesome from '@expo/vector-icons/build/FontAwesome';
 import * as MediaLibrary from 'expo-media-library';
 import { BottomSheet } from "react-native-elements";
-import * as Sharing from 'expo-sharing';
 import ModalImage from "./modalImage";
 import { pictureNewType } from "../type/pictureNewType";
 const Gallery:React.FunctionComponent<{pictureArray: pictureNewType[], setTable: React.Dispatch<React.SetStateAction<pictureNewType[]>>}> = ({pictureArray, setTable, ...props}) => {
     
     const [modalPictureVisible, setModalPictureVisible] = useState(false);
     const [picturebase64, setPictureBase64] = useState(Object || undefined);
+    const [pictureUri, setPictureUri] = useState(Object || undefined);
     const [hasPermission, setHasPermission] = useState(Boolean||null);
-    const [visibleIcon, setVisibleIcon] = useState(false);
     const [BottomSheetVisible, setVisibleBottomSheet] = useState(false);
     // const saved : pictureNewType = ([
     //     ...pictureArray,
@@ -37,14 +36,6 @@ const Gallery:React.FunctionComponent<{pictureArray: pictureNewType[], setTable:
         })();
       }, []);
       
-      let openShareDialogAsync = async (item : Object)  => {
-        if (Platform.OS === 'web') {
-         console.log('pas valable')
-          return;
-        }
-    
-        await Sharing.shareAsync(item.toString());
-      }; 
     return <FlatList
         horizontal={true}
         data={pictureArray}
@@ -54,12 +45,13 @@ const Gallery:React.FunctionComponent<{pictureArray: pictureNewType[], setTable:
                     <View style={{ borderColor: '#fff', borderWidth: 2, flex: 1 / 3 }}>
                         <TouchableOpacity onPress={() => { 
                             setModalPictureVisible(!modalPictureVisible), 
-                            setPictureBase64(item.base64) 
+                            setPictureBase64(item.base64),
+                            setPictureUri(item.uri)
                         }}>
                             <Image source={{ uri: 'data:image/jpg;base64,' + item.base64 }} style={{ width: 120, height: 120, borderColor: 'red' }}>
                             </Image>
                         </TouchableOpacity>
-                        <Modal
+                        {/* <Modal
                         visible={modalPictureVisible}
                         onRequestClose={() => {
                             setModalPictureVisible(!modalPictureVisible);
@@ -70,8 +62,8 @@ const Gallery:React.FunctionComponent<{pictureArray: pictureNewType[], setTable:
                                 <FontAwesome name="share" size={40} style={{color: '#fff', position: 'absolute', padding:20}}  onPress={() => openShareDialogAsync(item.uri)}></FontAwesome>
                             </View>
 
-                        </Modal>
-                        {/* <ModalImage picturebase64={picturebase64} setModalPictureVisible={setModalPictureVisible} modalPictureVisible={modalPictureVisible}></ModalImage> */}
+                        </Modal> */}
+                        <ModalImage pictureUri={pictureUri} picturebase64={picturebase64} setModalPictureVisible={setModalPictureVisible} modalPictureVisible={modalPictureVisible}></ModalImage>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent:'space-between'}}>
                         <FontAwesome name={item.saved ? "save" : "cloud" } size={40} style={{color: '#000'}} onPress={ 
