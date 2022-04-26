@@ -51,18 +51,6 @@ const Gallery:React.FunctionComponent<{pictureArray: pictureNewType[], setTable:
                             <Image source={{ uri: 'data:image/jpg;base64,' + item.base64 }} style={{ width: 120, height: 120, borderColor: 'red' }}>
                             </Image>
                         </TouchableOpacity>
-                        {/* <Modal
-                        visible={modalPictureVisible}
-                        onRequestClose={() => {
-                            setModalPictureVisible(!modalPictureVisible);
-                        }}
-                        >
-                            <View>
-                                <Image source={{ uri: 'data:image/jpg;base64,' + picturebase64 }} style={{ width: '100%', height: '100%', borderColor: 'red' }}></Image>
-                                <FontAwesome name="share" size={40} style={{color: '#fff', position: 'absolute', padding:20}}  onPress={() => openShareDialogAsync(item.uri)}></FontAwesome>
-                            </View>
-
-                        </Modal> */}
                         <ModalImage pictureUri={pictureUri} picturebase64={picturebase64} setModalPictureVisible={setModalPictureVisible} modalPictureVisible={modalPictureVisible}></ModalImage>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent:'space-between'}}>

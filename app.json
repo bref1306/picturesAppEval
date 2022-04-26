@@ -22,10 +22,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF",
-        "permissions": [
-          "WRITE_EXTERNAL_STORAGE"
-        ]
+        "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
