@@ -23,9 +23,13 @@ const ModalImage:React.FunctionComponent<{picturebase64: Object, pictureUri: Obj
       if (uri != null) {
         //If file selected then create FormData
         const fileToUpload = uri;
+        if (Platform.OS == 'ios') {
+          fileToUpload.replace('file://', "");
+        }
         const data = new FormData();
         data.append('photo', {name: 'Image', uri : fileToUpload, type:'image/jpg'});
         console.log(data);
+        
         let res = await fetch(
           'https://7a66-212-106-119-25.eu.ngrok.io/multipart-upload',
           {
